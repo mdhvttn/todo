@@ -110,7 +110,11 @@ class todo:
                 try:
                     todo.cursor.execute(sql)
                     todo.conn.commit()
-                    print(f'Your have deleted task from your todolist id: {key}')
+                    rowcount = todo.cursor.rowcount
+                    if rowcount == 0:
+                        print(f'There is no task avaliable for id: {key}')
+                    else:
+                        print(f'Your have deleted task from your todolist id: {key}')
                 except Exception as e:
                     print(e)
                     todo.conn.rollback()
