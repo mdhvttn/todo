@@ -75,7 +75,11 @@ class todo:
                 tuple = (updated_title,id)
                 todo.cursor.execute(sql,tuple)
                 todo.conn.commit()
-                print(f'Your have updated your title of task id: {id}')
+                rowcount = todo.cursor.rowcount
+                if rowcount == 0:
+                    print(f'There is no task avaliable for id: {id}')
+                else:
+                    print(f'Your have updated your title of task id: {id}')
                 todo.conn.close()
             except Exception as e:
                 print(e)
@@ -92,7 +96,12 @@ class todo:
                     tuple = (arr[1].lower(),datetime.now(),id)
                     todo.cursor.execute(sql,tuple)
                     todo.conn.commit()
-                    print(f'Your have updated the status of task id: {id}')
+                    rowcount = todo.cursor.rowcount
+                    if rowcount == 0:
+                        print(f'There is no task avaliable for id: {id}')
+                    else:
+                        print(f'Your have updated the status of task id: {id}')
+                    
                     todo.conn.close()
                 except Exception as e:
                     print(e)
