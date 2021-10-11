@@ -29,6 +29,9 @@ class todo:
         #for search by title
         elif self.args.search is not None:
             self.search(self.args.search)
+        #for search by date
+        elif self.args.date is not None:
+            self.date(self.args.date)
         #retieve all list of taks
         else:
             self.showList(self.args.list)
@@ -189,6 +192,26 @@ class todo:
                 print(e)
                 todo.conn.close()
 
+    #search by date
+    def date(self,key):
+        if self.connection():
+            sql = "select * from todolist where created_at like '%{key}%'".format(key = key[0])
+            print(sql)
+            try:
+                todo.cursor.execute(sql)
+                results = todo.cursor.fetchall()
+                print("id","title","created_at","completed_at","status")
+                for i in results:
+                    id = i[0]
+                    title = i[1]
+                    created_at = i[2]
+                    completed_at = i[3]
+                    status = i[4]
+                    print(f'{id},{title},{created_at},{completed_at},{status}')
+                todo.conn.close()
+            except Exception as e:
+                print(e)
+                todo.conn.close()
 
 if __name__=='__main__':
 
@@ -197,30 +220,35 @@ if __name__=='__main__':
     type = str,
     choices = ['completed','incomplete'],
     nargs="?",
-    help="get all the list or you can pass complete or incomplete as an argument"
+    help="Get all the list or you can pass complete or incomplete as an argument"
     )
     parser.add_argument('-c','--create',
     type = str,
     nargs='+',
-    help="pass title"
+    help="Pass title along with task id"
     )
     parser.add_argument('--edit-title',
     nargs='+',
-    help="pass two argument first is todo list id and second one is update title"
+    help="Pass two argument first is todo list id and second one is to update the title"
     )
     parser.add_argument('--edit-status',
     nargs=2,
-    help="pass two argument first is todo list id and second one is update status"
+    help="Pass two argument first is todo list id and second one is update status"
     )
     parser.add_argument('-d','--delete',
     type=int,
     nargs='+',
-    help="pass the id of task that you wants to delete"
+    help="Pass the id of task that you wants to delete"
     )
     parser.add_argument('-s','--search',
     type=str,
     nargs=1,
-    help="pass key you want to search"
+    help="Pass key that you want to search in all the task list"
+    )
+    parser.add_argument('--date',
+    type=str,
+    nargs=1,
+    help="Pass date as a argument in YYYY-MM-DD format"
     )
     args = parser.parse_args()
     a = todo(args)
